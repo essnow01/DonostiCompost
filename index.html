@@ -10,6 +10,37 @@
 <div id="canvas-wrap"></div>
 
 <button id="toggleUI" title="mostrar/ocultar controles">⋮</button>
+<button id="infoBtn" title="información del proyecto">i</button>
+
+<div id="infoOverlay"></div>
+<div id="infoPanel">
+  <button id="infoCloseBtn" title="cerrar">×</button>
+
+  <h2>Compost Digital</h2>
+  <div class="info-subtitle">Donostia / San Sebastián</div>
+
+  <p class="info-eu">Topaketaren irudi bat partikula, hari eta kolore arrastoetan deskonposatzen da. Konpostatzean, ez da desagertzen: hiri-trama gisa itzultzen da, memoriaz, elkarrizketaz eta kodez egindako Donostiaren forma posible gisa. Konpost digital honek ez du jatorrizko irudia berreskuratu nahi; haren kondarrei beste zerbait sortzen uzten die: geratzen denarekin ehundutako lurralde partekatu bat.</p>
+
+  <p class="info-es">Una imagen del encuentro se descompone en partículas, hilos y restos de color. Al compostarse, no desaparece: vuelve como trama urbana, como una forma posible de Donostia hecha de memoria, conversación y código. Este compost digital no busca restaurar la imagen original, sino dejar que sus residuos produzcan otra cosa: un territorio compartido, tejido con lo que queda.</p>
+
+  <h3>cómo usarlo</h3>
+  <ul class="info-instructions">
+    <li><strong>depositar imágenes</strong> — subí una o varias fotos desde el panel de control.</li>
+    <li><strong>compostar</strong> — descompone las imágenes en partículas y las teje sobre la trama urbana de Donostia.</li>
+    <li><strong>ordenar por</strong> — cambia el criterio de color con el que se organiza el tejido (tono, luminosidad, saturación, o tono+luz).</li>
+    <li><strong>temperatura día</strong> — elegí una fecha para colorear el tejido según datos térmicos reales de la ciudad.</li>
+    <li><strong>textura del tejido / velocidad de fermentación / espaciado del hilo</strong> — ajustan el aspecto y el ritmo de la composición.</li>
+    <li><strong>reiniciar</strong> — borra el tejido actual y empieza de nuevo.</li>
+    <li><strong>centrar vista</strong> — vuelve a encuadrar el mapa de Donostia.</li>
+    <li><strong>recargar trama urbana</strong> — vuelve a pedir la geometría de calles y litoral.</li>
+    <li><strong>capturar</strong> — guarda una imagen del estado actual.</li>
+    <li><strong>invertir color</strong> — invierte la paleta del tejido.</li>
+    <li><strong>modo térmico</strong> — activa la coloración según temperatura.</li>
+    <li><strong>arrastrar</strong> el mapa para moverlo, <strong>rueda del ratón</strong> para acercar o alejar.</li>
+  </ul>
+
+  <div id="geo-credit-info">datos de calles y litoral © colaboradores de OpenStreetMap, vía Overpass API · temperaturas vía Open-Meteo</div>
+</div>
 
 <div class="overlay" id="overlay">
   <h1>Compost Digital</h1>
@@ -75,5 +106,29 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 <script src="sketch.js"></script>
+<script>
+(function () {
+  const infoBtn = document.getElementById('infoBtn');
+  const infoPanel = document.getElementById('infoPanel');
+  const infoOverlay = document.getElementById('infoOverlay');
+  const infoCloseBtn = document.getElementById('infoCloseBtn');
+
+  function openInfo() {
+    infoPanel.classList.add('open');
+    infoOverlay.classList.add('open');
+  }
+  function closeInfo() {
+    infoPanel.classList.remove('open');
+    infoOverlay.classList.remove('open');
+  }
+
+  infoBtn.addEventListener('click', openInfo);
+  infoCloseBtn.addEventListener('click', closeInfo);
+  infoOverlay.addEventListener('click', closeInfo);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeInfo();
+  });
+})();
+</script>
 </body>
 </html>
