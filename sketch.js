@@ -250,28 +250,57 @@ async function loadDonostiGeometry() {
 );
 out geom;`;
 
+  const OVERPASS_MIRRORS = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass.private.coffee/api/interpreter'
+  ];
+
+  let lines = null;
+  let lastError = null;
+
+  for (const endpoint of OVERPASS_MIRRORS) {
+    try {
+      statusEl.textContent = `cargando trama urbana de Donostia... (${endpoint.replace('https://', '').split('/')[0]})`;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: 'data=' + encodeURIComponent(query),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) throw new Error(endpoint + ' status ' + res.status);
+
+      const data = await res.json();
+
+      const candidateLines = data.elements
+        .filter(el => el.type === 'way' && el.geometry)
+        .map(el => el.geometry.map(pt => [pt.lat, pt.lon]));
+
+      if (candidateLines.length === 0) throw new Error(endpoint + ' sin geometría');
+
+      lines = candidateLines;
+      break;
+    } catch (err) {
+      lastError = err;
+      console.warn('Overpass mirror falló:', endpoint, err);
+    }
+  }
+
   try {
-    const res = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      body: 'data=' + encodeURIComponent(query)
-    });
-
-    if (!res.ok) throw new Error('overpass status ' + res.status);
-
-    const data = await res.json();
-
-    const lines = data.elements
-      .filter(el => el.type === 'way' && el.geometry)
-      .map(el => el.geometry.map(pt => [pt.lat, pt.lon]));
-
-    if (lines.length === 0) throw new Error('sin geometría');
+    if (!lines) throw lastError || new Error('todos los espejos de Overpass fallaron');
 
     lastLines = lines;
     buildLoomFromLines(lines);
 
     statusEl.textContent = `trama cargada: ${lines.length} vías/litoral de Donostia. cargando temperaturas...`;
   } catch (err) {
-    console.warn('Overpass falló, usando geometría de respaldo:', err);
+    console.warn('Overpass falló en todos los espejos, usando geometría de respaldo:', err);
 
     lastLines = fallbackDonostiLines();
     buildLoomFromLines(lastLines);
