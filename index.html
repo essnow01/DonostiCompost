@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Compost Digital — Donosti</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="canvas-wrap"></div>
+
+<button id="toggleUI" title="mostrar/ocultar controles">⋮</button>
+
+<div class="overlay" id="overlay">
+  <h1>Compost Digital</h1>
+  <div class="subtitle">tejido guiado por la trama urbana de Donostia</div>
+
+  <div class="panel">
+    <div class="ctrl">
+      <label>depositar imágenes</label>
+      <input type="file" id="fileInput" accept="image/*" multiple>
+    </div>
+
+    <div class="ctrl">
+      <label>ordenar por</label>
+      <select id="sortMode">
+        <option value="hue">tono (hue)</option>
+        <option value="lightness">luminosidad</option>
+        <option value="saturation">saturación</option>
+        <option value="hueLight">tono + luz (trama)</option>
+      </select>
+    </div>
+
+    <div class="ctrl">
+      <label>temperatura día</label>
+      <select id="tempDate">
+        <option value="2026-07-01">1 julio 2026</option>
+        <option value="2026-07-02">2 julio 2026</option>
+        <option value="2026-07-03">3 julio 2026</option>
+        <option value="2026-07-04">4 julio 2026</option>
+      </select>
+    </div>
+
+    <div class="ctrl">
+      <label>textura del tejido</label>
+      <input type="range" id="weave" min="0" max="40" value="8">
+    </div>
+
+    <div class="ctrl">
+      <label>velocidad de fermentación</label>
+      <input type="range" id="speed" min="1" max="10" value="4">
+    </div>
+
+    <div class="ctrl">
+      <label>espaciado del hilo</label>
+      <input type="range" id="tileSize" min="4" max="16" value="7">
+    </div>
+
+    <div class="btn-row">
+      <button id="compostBtn" disabled>compostar</button>
+      <button id="resetBtn">reiniciar</button>
+      <button id="resetViewBtn">centrar vista</button>
+      <button id="reloadGeoBtn">recargar trama urbana</button>
+      <button id="captureBtn">capturar</button>
+      <button id="invertBtn">invertir color</button>
+      <button id="weatherModeBtn">modo térmico</button>
+      
+    </div>
+  </div>
+
+  <div id="status">cargando trama urbana de Donostia...</div>
+  <div class="hint">arrastrá para mover el mapa · rueda del ratón para acercar/alejar</div>
+  <div id="geo-credit">datos de calles y litoral © colaboradores de OpenStreetMap, vía Overpass API · temperaturas vía Open-Meteo</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="sketch.js"></script>
+</body>
+</html>
